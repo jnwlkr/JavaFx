@@ -30,7 +30,7 @@ public class AppController{
                 //if(bSimulation)
                 {
                     long timeCurrent = System.currentTimeMillis() - timeStartAnimationTimer;
-                    long step = timeCurrent - timePreviosAnimationTimer;
+                    long step = timeCurrent - timePreviousAnimationTimer;
                     if (step >= 100) {
                         timeAnimationTimer = (int) (timeCurrent / 100);
                         habitat.update(timeAnimationTimer);
@@ -122,9 +122,9 @@ public class AppController{
     «ОК» и «Отмена». При нажатии на «ОК» симуляции полностью останавливается, а при нажатии на «Отмена»,
     соответственно продолжается;
     */
-    private void showInformationDialog(String mesageTextArea){
-        Button okButton = new Button("Ок");
-        Button cancelButton = new Button("Отмена");
+    private void showInformationDialog(String messageTextArea){         // spelling correction
+        Button okButton = new Button("Ok");                             // Button text compiles neither English nor Russian
+        Button cancelButton = new Button("Cancel");                     // see above comment
         Stage window = new Stage();
 
         // Events for buttonClose
@@ -143,9 +143,9 @@ public class AppController{
         window.initModality(Modality.APPLICATION_MODAL);
         window.setWidth(350);
         window.setHeight(350);
-        window.setTitle("Модальное диалоговое окно ");
+        window.setTitle("Modal Dialogue Box");                   // text does not compile English or Russian
 
-        TextArea textArea = new TextArea(mesageTextArea);
+        TextArea textArea = new TextArea(messageTextArea);      // spelling correction
         textArea.setPrefColumnCount(15);
         textArea.setPrefRowCount(5);
 
