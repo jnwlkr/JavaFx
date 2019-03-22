@@ -21,9 +21,9 @@ public class AppController{
     private StopWatch stopWatch;
     private boolean showLog = true;
 
-    private AnimationTimer timer;
+    private AnimationTimer timer;                   // variable timer has no value - see below; timer has issues
     {
-        this.timer = new AnimationTimer() {
+        this.timer = new AnimationTimer() {         // 1 way to resolve: getTimer() and setTimer(parameters) methods
             @Override
             public void handle(long now) {
                 //printTime();
