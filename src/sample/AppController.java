@@ -21,7 +21,7 @@ public class AppController{
     private StopWatch stopWatch;
     private boolean showLog = true;
 
-    private AnimationTimer timer;
+    private AnimationTimer timer;   // variable timer never locally used
     {
         this.timer = new AnimationTimer() {
             @Override
@@ -29,13 +29,13 @@ public class AppController{
                 //printTime();
                 //if(bSimulation)
                 {
-                    long timeCurrent = System.currentTimeMillis() - timeStartAnimationTimer;
-                    long step = timeCurrent - timePreviosAnimationTimer;
+                    long timeCurrent = System.currentTimeMillis() - timeStartAnimationTimer;    // naming conventions?
+                    long step = timeCurrent - timePreviousAnimationTimer;    // spelling - timePreviousAnimationTimer (too verbose?) 
                     if (step >= 100) {
                         timeAnimationTimer = (int) (timeCurrent / 100);
                         habitat.update(timeAnimationTimer);
-                        timePreviosAnimationTimer = timeCurrent;
-                        secondsAnimationTimer = timeAnimationTimer - minutesAnimationTimer * 60;
+                        timePreviousAnimationTimer = timeCurrent;            // spelling - see above comment
+                        secondsAnimationTimer = timeAnimationTimer - minutesAnimationTimer * 60;    // naming: secondsTimer, minutesTimer....
                         //hibitian.update(seconds);
                         if (secondsAnimationTimer % 60 == 0) {
                             minutesAnimationTimer++;
@@ -45,10 +45,10 @@ public class AppController{
                 }
             }
         };
-    }
+    }   // LINES 49-53: we should rename and reorganize variables 
     int timeStartAnimationTimer = 0;
     int timeAnimationTimer = 0;
-    long timePreviosAnimationTimer = 0;
+    long timePreviousAnimationTimer = 0;
     private int secondsAnimationTimer = 0;
     private int minutesAnimationTimer = 0;
 
@@ -58,7 +58,7 @@ public class AppController{
         disableButtons(stopWatch.getStateOfTimer());
     }
 
-    public void appStart() throws Exception {
+    public void appStart() throws Exception { 
         if(stopWatch.getStateOfTimer() == stopWatch.STOP) habitat.removeAll();
         stopWatch.start(Main.controller.getFieldTime(), habitat);
         disableButtons(stopWatch.getStateOfTimer());
@@ -73,7 +73,7 @@ public class AppController{
     public void appStop() throws Exception {
         stopWatch.pause();
         //showInformationDialog(makeResultLog());
-        WindowInformation windows = new WindowInformation("Модальеное окно",makeResultLog(),this);
+        WindowInformation windows = new WindowInformation("Modal window" ,makeResultLog(),this); // Russian improperly displayed; "Модальеное окно" to English
     }
 
     public void setShowLog(boolean showLog) {
@@ -87,12 +87,12 @@ public class AppController{
     private String makeResultLog(){
         return new String(
                 "Total Rabbits: " + Rabbit.countsAllRabbits +
-                        ";"+ '\n' +"Odinary Rabbits: " + OdinaryRabbit.countOdinaryRabbit +
-                        ";"+ '\n' +"ALbinos Rabbits: " + AlbinosRabbit.countAlbinosRabbit +
-                        ";"+ '\n' +"Time of simulation Min:" + stopWatch.getMinutes() + " Sec: " +stopWatch.getSeconds()
+                        ";"+ '\n' +"Ordinary Rabbits: " + OdinaryRabbit.countOdinaryRabbit +    
+                        ";"+ '\n' +"Albino Rabbits: " + AlbinosRabbit.countAlbinosRabbit +      
+                        ";"+ '\n' +"Time of simulation Min:" + stopWatch.getMinutes() + " Sec: " +stopWatch.getSeconds()       
         );
     }
-
+// Something wrong in this method - examine logic, simple fix. Program does not respond to start/pause correctly.
     public void disableButtons(int stateOfTimer){
         switch (stateOfTimer) {
             case StopWatch.RUNNING: {
@@ -122,30 +122,39 @@ public class AppController{
     «ОК» и «Отмена». При нажатии на «ОК» симуляции полностью останавливается, а при нажатии на «Отмена»,
     соответственно продолжается;
     */
-    private void showInformationDialog(String mesageTextArea){
-        Button okButton = new Button("Ок");
-        Button cancelButton = new Button("Отмена");
+            // Jen comment reference 
+        /* ENGLISH: When you stop simulation, modal dialogue box appears (if enabled) giving 
+        * the amount and the type of objects generated in the time elapsed. All info
+         * displayed in TextArea isn't editable.
+         * We have 2 buttons in the dialogue box:
+             * 1) "Ok": Click to stop simulation
+             * 2) "Cancel": Continues simulation
+         */
+    
+    private void showInformationDialog(String messageTextArea){
+        Button okButton = new Button("Ok");
+        Button cancelButton = new Button("Cancel");
         Stage window = new Stage();
 
         // Events for buttonClose
         cancelButton.setOnAction(event -> {
             stopWatch.start();
-            disableButtons(stopWatch.getStateOfTimer());
+            disableButtons(stopWatch.getStateOfTimer());        // suggestion: rename to getTimerState()
             window.close();
         });
         okButton.setOnAction(event -> {
             stopWatch.stop();
             habitat.removeAll();
-            disableButtons(stopWatch.getStateOfTimer());
+            disableButtons(stopWatch.getStateOfTimer());        // how about getTimerState()? see above
             window.close();
         });
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setWidth(350);
         window.setHeight(350);
-        window.setTitle("Модальное диалоговое окно ");
+        window.setTitle("Modal Dialogue Box");  // "Модальное диалоговое окно"
 
-        TextArea textArea = new TextArea(mesageTextArea);
+        TextArea textArea = new TextArea(messageTextArea);
         textArea.setPrefColumnCount(15);
         textArea.setPrefRowCount(5);
 
